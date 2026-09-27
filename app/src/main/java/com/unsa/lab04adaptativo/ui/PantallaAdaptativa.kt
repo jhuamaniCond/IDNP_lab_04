@@ -1,5 +1,6 @@
 package com.unsa.lab04adaptativo.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -20,15 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.unsa.lab04adaptativo.ui.theme.Lab04AdaptativoTheme
 
 /**
- * Punto 1: pantalla con título, bloque de contenido y acción principal que
- * cambia de organización según el ancho disponible.
+ * Punto 1 y 3: Pantalla adaptativa que soporta cambios de ancho disponible
+ * y se adapta automáticamente a Modo Claro / Modo Oscuro mediante [MaterialTheme].
  *
- * - Ancho < 600 dp (teléfono en vertical): una sola columna con scroll.
- * - Ancho >= 600 dp (tableta, teléfono apaisado): dos columnas, el
- *   contenido a la izquierda y la ficha con la acción a la derecha.
- *
- * La decisión se toma con [BoxWithConstraints], que entrega el espacio que
- * realmente recibe el composable, no el tamaño nominal del dispositivo.
+ * Todos los textos e íconos consumen [MaterialTheme.colorScheme] y [MaterialTheme.typography]
+ * eliminando valores de color o tamaño fijos (hardcoded).
  */
 @Composable
 fun PantallaAdaptativa(
@@ -87,8 +84,6 @@ private fun DistribucionAmplia(
         IndicadorAncho(etiquetaAncho)
         Titulo(apunte)
         Row(horizontalArrangement = Arrangement.spacedBy(Espaciado.l)) {
-            // El contenido se lleva 3/5 del ancho y la ficha 2/5: proporciones,
-            // no anchos fijos, para que sirva igual a 600 dp que a 1280 dp.
             Column(
                 modifier = Modifier
                     .weight(3f)
@@ -134,10 +129,12 @@ private fun BloqueContenido(apunte: Apunte) {
         Text(
             text = "Descripción",
             style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
             text = apunte.descripcion,
             style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -151,11 +148,11 @@ private fun FichaApunte(apunte: Apunte) {
             verticalArrangement = Arrangement.spacedBy(Espaciado.s),
         ) {
             FilaDato("Curso", apunte.curso)
-            HorizontalDivider()
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             FilaDato("Autor", apunte.autor)
-            HorizontalDivider()
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             FilaDato("Páginas", apunte.paginas.toString())
-            HorizontalDivider()
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             FilaDato("Valoración", "${apunte.valoracion} / 5")
         }
     }
@@ -170,11 +167,13 @@ private fun FilaDato(etiqueta: String, valor: String) {
         Text(
             text = etiqueta,
             style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = valor,
             style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(2f),
         )
     }
@@ -192,20 +191,44 @@ private fun AccionPrincipal(onClick: () -> Unit, modifier: Modifier = Modifier) 
 }
 
 // ---------------------------------------------------------------- previews
-@Preview(name = "Compacto 360 dp", showBackground = true, widthDp = 360, heightDp = 780)
+@Preview(
+    name = "Modo Claro - Compacto (360 dp)",
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 780,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+)
 @Composable
-private fun PreviewCompacto() {
-    Lab04AdaptativoTheme { PantallaAdaptativa() }
+private fun PreviewModoClaroCompacto() {
+    Lab04AdaptativoTheme(darkTheme = false) {
+        PantallaAdaptativa()
+    }
 }
 
-@Preview(name = "Amplio 840 dp", showBackground = true, widthDp = 840, heightDp = 600)
+@Preview(
+    name = "Modo Oscuro - Compacto (360 dp)",
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 780,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
 @Composable
-private fun PreviewAmplio() {
-    Lab04AdaptativoTheme { PantallaAdaptativa() }
+private fun PreviewModoOscuroCompacto() {
+    Lab04AdaptativoTheme(darkTheme = true) {
+        PantallaAdaptativa()
+    }
 }
 
-@Preview(name = "Compacto, fuente 1.5x", showBackground = true, widthDp = 360, heightDp = 780, fontScale = 1.5f)
+@Preview(
+    name = "Modo Oscuro - Amplio (840 dp)",
+    showBackground = true,
+    widthDp = 840,
+    heightDp = 600,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
 @Composable
-private fun PreviewCompactoFuenteGrande() {
-    Lab04AdaptativoTheme { PantallaAdaptativa() }
+private fun PreviewModoOscuroAmplio() {
+    Lab04AdaptativoTheme(darkTheme = true) {
+        PantallaAdaptativa()
+    }
 }
