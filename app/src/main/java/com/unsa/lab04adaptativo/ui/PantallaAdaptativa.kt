@@ -84,6 +84,7 @@ private fun DistribucionAmplia(
         IndicadorAncho(etiquetaAncho)
         Titulo(apunte)
         Row(horizontalArrangement = Arrangement.spacedBy(Espaciado.l)) {
+            // Columna izquierda: Descriocion (con Scroll)
             Column(
                 modifier = Modifier
                     .weight(3f)
@@ -92,8 +93,11 @@ private fun DistribucionAmplia(
             ) {
                 BloqueContenido(apunte)
             }
+            // Columna derecha: Ficha y Boton (AJUSTE: Se agrega verticalScroll para Landscape)
             Column(
-                modifier = Modifier.weight(2f),
+                modifier = Modifier
+                    .weight(2f)
+                    .verticalScroll(rememberScrollState()), // <--- Ajuste: verticalScroll
                 verticalArrangement = Arrangement.spacedBy(Espaciado.m),
             ) {
                 FichaApunte(apunte)
@@ -229,6 +233,49 @@ private fun PreviewModoOscuroCompacto() {
 @Composable
 private fun PreviewModoOscuroAmplio() {
     Lab04AdaptativoTheme(darkTheme = true) {
+        PantallaAdaptativa()
+    }
+}
+
+// PREVIEW PARA PUTNO 4: Prueba de Fuente Aumentada (fontscale = 1.5x)
+@Preview(
+    name = "Punto 4 - Fuente Aumentada (1.5x)",
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 780,
+    fontScale = 1.5f
+)
+@Composable
+private fun PreviewFuenteAumentada() {
+    Lab04AdaptativoTheme {
+        PantallaAdaptativa()
+    }
+}
+
+// PREVIEW PARA PUNTO 5: Pantalla Amplia / Tableta (1280 dp)
+@Preview(
+    name = "Punto 5 - Tableta / Pantalla Amplia (1280 dp)",
+    showBackground = true,
+    widthDp = 1280,
+    heightDp = 800
+)
+@Composable
+private fun PreviewTabletAmplia() {
+    Lab04AdaptativoTheme {
+        PantallaAdaptativa()
+    }
+}
+
+// PREVIEW PARA PUNTO 6: Orientación Landscape / Apaisado (800x360 dp)
+@Preview(
+    name = "Punto 6 - Orientacion Landscape (800x360 dp)",
+    showBackground = true,
+    widthDp = 800,
+    heightDp = 360
+)
+@Composable
+private fun PreviewLandscape() {
+    Lab04AdaptativoTheme {
         PantallaAdaptativa()
     }
 }
